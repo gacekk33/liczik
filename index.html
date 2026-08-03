@@ -373,68 +373,7 @@ document.getElementById("days").value="";
 
 
 
-function randomBonus(){
 
-
-
-let r=Math.random();
-
-
-let min;
-
-
-
-if(r < 0.45){
-
-
-min=Math.floor(Math.random()*10)+1;
-
-
-}
-
-else if(r < 0.75){
-
-
-min=Math.floor(Math.random()*20)+11;
-
-
-}
-
-else if(r < 0.95){
-
-
-min=Math.floor(Math.random()*20)+31;
-
-
-}
-
-else{
-
-
-min=Math.floor(Math.random()*10)+51;
-
-
-}
-
-
-
-seconds += min*60;
-
-
-save();
-
-
-}
-
-
-
-
-
-
-function bonusLoop(){
-
-
-randomBonus();
 
 
 
