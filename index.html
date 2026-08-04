@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="pl">
 <head>
-
 <meta charset="UTF-8">
 <title>Neonowy Licznik</title>
 
@@ -24,7 +23,6 @@ body {
 
 
 .timer {
-
     color:#b6ff00;
     font-size:100px;
     font-weight:bold;
@@ -33,9 +31,7 @@ body {
     0 0 10px #b6ff00,
     0 0 30px #b6ff00,
     0 0 60px #b6ff00;
-
 }
-
 
 
 .dayCounter {
@@ -49,31 +45,24 @@ body {
     text-shadow:
     0 0 10px #b6ff00,
     0 0 30px #b6ff00;
-
 }
-
 
 
 input {
 
-    margin-top:35px;
-
+    margin-top:30px;
     padding:12px;
 
     width:200px;
 
     background:black;
-
     color:#b6ff00;
 
     border:2px solid #b6ff00;
 
     font-size:20px;
-
     text-align:center;
-
 }
-
 
 
 button {
@@ -91,9 +80,7 @@ button {
     font-size:20px;
 
     cursor:pointer;
-
 }
-
 
 
 button:hover {
@@ -135,6 +122,16 @@ DODAJ
 <br>
 
 
+<input id="removeTime" type="number" placeholder="Usuń minuty">
+
+<button onclick="removeMinutes()">
+USUŃ
+</button>
+
+
+<br>
+
+
 <input id="days" type="number" placeholder="Numer dnia">
 
 <button onclick="setDay()">
@@ -142,8 +139,8 @@ USTAW
 </button>
 
 
-</div>
 
+</div>
 
 
 
@@ -154,7 +151,7 @@ let seconds = 24 * 60 * 60;
 
 
 
-// WCZYTANIE CZASU
+// WCZYTYWANIE CZASU
 
 if(localStorage.time){
 
@@ -171,12 +168,13 @@ if(localStorage.time){
 
     seconds -= passed;
 
+
+    if(seconds < 0)
+        seconds = 0;
+
 }
 
 
-
-
-// DNI
 
 let dayNumber =
 Number(localStorage.day || 0);
@@ -185,18 +183,20 @@ Number(localStorage.day || 0);
 
 
 
+
 function formatTime(sec){
 
 
-    if(sec < 0)
-        sec = 0;
+    let h =
+    Math.floor(sec/3600);
 
 
-    let h = Math.floor(sec/3600);
+    let m =
+    Math.floor((sec%3600)/60);
 
-    let m = Math.floor((sec%3600)/60);
 
-    let s = sec%60;
+    let s =
+    sec%60;
 
 
     return String(h).padStart(2,"0")
@@ -205,8 +205,9 @@ function formatTime(sec){
     +":"
     +String(s).padStart(2,"0");
 
-
 }
+
+
 
 
 
@@ -223,6 +224,7 @@ function update(){
 
 
 
+
 function updateDay(){
 
 
@@ -231,6 +233,7 @@ function updateDay(){
 
 
 }
+
 
 
 
@@ -249,22 +252,45 @@ function save(){
 
 
 
-// GŁÓWNY LICZNIK
+
+
+// LICZNIK ODPORNY NA USYPIANIE KARTY
+
+
+let lastTick = Date.now();
 
 
 setInterval(()=>{
 
 
-    if(seconds > 0){
+    let now = Date.now();
 
-        seconds--;
+
+    let passed =
+    Math.floor((now-lastTick)/1000);
+
+
+
+    if(passed > 0){
+
+
+        seconds -= passed;
+
+
+        if(seconds < 0)
+            seconds = 0;
+
+
+        lastTick = now;
+
+
+        update();
+
+        save();
+
 
     }
 
-
-    update();
-
-    save();
 
 
 },1000);
@@ -275,7 +301,9 @@ setInterval(()=>{
 
 
 
-// DODAWANIE MINUT
+
+
+// DODAWANIE
 
 
 function addMinutes(){
@@ -296,13 +324,10 @@ function addMinutes(){
 
         update();
 
-
     }
 
 
-
     document.getElementById("addTime").value="";
-
 
 }
 
@@ -312,7 +337,52 @@ function addMinutes(){
 
 
 
-// USTAWIANIE DNIA
+
+
+// USUWANIE
+
+
+function removeMinutes(){
+
+
+    let value =
+    Number(document.getElementById("removeTime").value);
+
+
+
+    if(value > 0){
+
+
+        seconds -= value * 60;
+
+
+
+        if(seconds < 0)
+            seconds = 0;
+
+
+
+        save();
+
+        update();
+
+
+    }
+
+
+    document.getElementById("removeTime").value="";
+
+}
+
+
+
+
+
+
+
+
+
+// DNI
 
 
 function setDay(){
@@ -339,7 +409,6 @@ function setDay(){
 
 
     document.getElementById("days").value="";
-
 
 }
 
